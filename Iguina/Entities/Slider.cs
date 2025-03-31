@@ -28,8 +28,16 @@ namespace Iguina.Entities
         /// </summary>
         public int KeyboardStep = 1;
 
-        // current handle offset
+        /// <summary>
+        /// Current handle offset
+        /// </summary>
         float _currHandleOffset;
+
+        /// <summary>
+        /// Last value that "drove" the <see cref="_currHandleOffset"/>, i.e. the width or height of the slider's bounding rect.
+        /// This is used to determine if the slider layout has changed or initialized, so we can snap the value directly to avoid glitchy visuals.
+        /// </summary>
+        int _lastHandleDrivingValue;
 
         /// <inheritdoc/>
         internal override bool LockFocusWhileMouseDown => true;
@@ -332,9 +340,18 @@ namespace Iguina.Entities
                 var offsetX = FlippedDirection ?
                     (int)((1f - (float)relativeValue / ValueRange) * LastInternalBoundingRect.Width) :
                     (int)(((float)relativeValue / ValueRange) * LastInternalBoundingRect.Width);
-                float newOffset = offsetX - Handle.LastBoundingRect.Width / 2;
-                _currHandleOffset = InterpolateHandlePosition ?
-                    MathUtils.Lerp(_currHandleOffset, newOffset, dt * HandleInterpolationSpeed) : newOffset;
+                float newOffset = offsetX - Handle.LastBoundingRect.Width / 2f;
+                if (_lastHandleDrivingValue != LastInternalBoundingRect.Width)
+                {
+                    // If the slider's bounding box has changed or initialized, snap the handle directly to the new position
+                    _currHandleOffset = newOffset;
+                    _lastHandleDrivingValue = LastInternalBoundingRect.Width;
+                }
+                else
+                {
+                    _currHandleOffset = InterpolateHandlePosition ?
+                        MathUtils.Lerp(_currHandleOffset, newOffset, dt * HandleInterpolationSpeed) : newOffset;
+                }
                 Handle.Offset.X.SetPixels((int)_currHandleOffset);
             }
             // set vertical handle position
@@ -343,9 +360,19 @@ namespace Iguina.Entities
                 var offsetY = FlippedDirection ?
                     (int)(((float)relativeValue / ValueRange) * LastInternalBoundingRect.Height) :
                     (int)((1f - (float)relativeValue / ValueRange) * LastInternalBoundingRect.Height);
-                float newOffset = offsetY - Handle.LastBoundingRect.Height / 2;
-                _currHandleOffset = InterpolateHandlePosition ?
-                    MathUtils.Lerp(_currHandleOffset, newOffset, dt * HandleInterpolationSpeed) : newOffset;
+                float newOffset = offsetY - Handle.LastBoundingRect.Height / 2f;
+                if (_lastHandleDrivingValue != LastInternalBoundingRect.Height)
+                {
+                    // If the slider's bounding box has changed or initialized, snap the handle directly to the new position
+                    _currHandleOffset = newOffset;
+                    _lastHandleDrivingValue = LastInternalBoundingRect.Height;
+                }
+                else
+                {
+                    _currHandleOffset = InterpolateHandlePosition ?
+                        MathUtils.Lerp(_currHandleOffset, newOffset, dt * HandleInterpolationSpeed) : newOffset;
+                }
+
                 Handle.Offset.Y.SetPixels((int)_currHandleOffset);
             }
         }
