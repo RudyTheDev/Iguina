@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Iguina.Demo.MonoGame", "Igu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Iguina.Tests", "Iguina.Tests\Iguina.Tests.csproj", "{B9B47536-6B18-41CF-9213-F7EFA851483D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Iguina.Demo.MonoGameFSS", "Iguina.Demo.MonoGameFSS\Iguina.Demo.MonoGameFSS.csproj", "{1F03A11B-4924-42F1-9D9A-1A84A95FD4C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{B9B47536-6B18-41CF-9213-F7EFA851483D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9B47536-6B18-41CF-9213-F7EFA851483D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9B47536-6B18-41CF-9213-F7EFA851483D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F03A11B-4924-42F1-9D9A-1A84A95FD4C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F03A11B-4924-42F1-9D9A-1A84A95FD4C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F03A11B-4924-42F1-9D9A-1A84A95FD4C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F03A11B-4924-42F1-9D9A-1A84A95FD4C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
