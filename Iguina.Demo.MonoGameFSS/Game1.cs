@@ -9,7 +9,7 @@ namespace Iguina.Demo.MonoGame
     {
         private GraphicsDeviceManager _graphics = null!;
         private SpriteBatch _spriteBatch = null!;
-        MonoGameRenderer _renderer = null!;
+        MonoGameFSSRenderer _renderer = null!;
         MonoGameInput _input = null!;
         IguinaDemoStarter _demo = null!;
 
@@ -35,7 +35,7 @@ namespace Iguina.Demo.MonoGame
 
             // create demo
             _demo = new IguinaDemoStarter();
-            _renderer = new MonoGameRenderer(Content, GraphicsDevice, _spriteBatch, uiThemeFolder);
+            _renderer = new MonoGameFSSRenderer(Content, GraphicsDevice, _spriteBatch, uiThemeFolder);
             _input = new MonoGameInput();
             _demo.Start(_renderer, _input, uiThemeFolder);
 

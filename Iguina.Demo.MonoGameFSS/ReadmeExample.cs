@@ -37,7 +37,7 @@ namespace Iguina.Demo.MonoGame
             var uiThemeFolder = "../../../../Iguina.Demo/Assets/DefaultTheme";
 
             // create ui system
-            var renderer = new MonoGameRenderer(Content, GraphicsDevice, _spriteBatch, uiThemeFolder);
+            var renderer = new MonoGameFSSRenderer(Content, GraphicsDevice, _spriteBatch, uiThemeFolder);
             var input = new MonoGameInput();
             _uiSystem = new UISystem(Path.Combine(uiThemeFolder, "system_style.json"), renderer, input);
 
@@ -73,7 +73,7 @@ namespace Iguina.Demo.MonoGame
             GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
             
             // render ui
-            var renderer = (_uiSystem.Renderer as MonoGameRenderer)!;
+            var renderer = (_uiSystem.Renderer as MonoGameFSSRenderer)!;
             renderer.StartFrame();
             _uiSystem.Draw();
             renderer.EndFrame();
