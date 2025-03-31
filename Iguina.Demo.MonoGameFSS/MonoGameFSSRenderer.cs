@@ -155,6 +155,7 @@ namespace Iguina.Demo.MonoGame
         {
             var spriteFont = GetFont(fontId, fontSize);
             Microsoft.Xna.Framework.Vector2 measured = spriteFont.MeasureString(text, Vector2.One, spacing - 1f);
+            // TODO: WE ARE NOT MEASURING OUTLINE!
             return new Point((int)measured.X, (int)measured.Y);
         }
 
@@ -172,32 +173,49 @@ namespace Iguina.Demo.MonoGame
 
             SpriteFontBase spriteFont = GetFont(fontId, fontSize);
 
-            // draw outline
-            if ((outlineColor.A > 0) && (outlineWidth > 0))
+            if (outlineColor.A > 0 && outlineWidth > 0)
             {
-                // because we draw outline in a primitive way, we want it to fade a lot faster than fill color
-                if (outlineColor.A < 255)
+                // draw with outline
+                if (outlineColor.R == 0 && outlineColor.G == 0 && outlineColor.B == 0)
                 {
-                    float alphaFactor = (float)(outlineColor.A / 255f);
-                    outlineColor.A = (byte)((float)fillColor.A * Math.Pow(alphaFactor, 7));
+                    // black outline - use FSS built-in stroke, which is black
+                    var colorMg = ToMgColor(fillColor);
+                    _spriteBatch.DrawString(
+                        spriteFont, text, new Microsoft.Xna.Framework.Vector2(position.X, position.Y), colorMg, characterSpacing: spacing - 1f,
+                        effect: FontSystemEffect.Stroked,
+                        effectAmount: outlineWidth
+                    );
                 }
+                else
+                {
+                    // use hacky "outline" to draw custom color stroke
 
-                // draw outline
-                var outline = ToMgColor(outlineColor);
-                _spriteBatch.DrawString(spriteFont, text, new Microsoft.Xna.Framework.Vector2(position.X - outlineWidth, position.Y), outline, 0f, new Microsoft.Xna.Framework.Vector2(0, 0), Vector2.One, 0f, spacing - 1f);
-                _spriteBatch.DrawString(spriteFont, text, new Microsoft.Xna.Framework.Vector2(position.X, position.Y - outlineWidth), outline, 0f, new Microsoft.Xna.Framework.Vector2(0, 0), Vector2.One, 0f, spacing - 1f);
-                _spriteBatch.DrawString(spriteFont, text, new Microsoft.Xna.Framework.Vector2(position.X + outlineWidth, position.Y), outline, 0f, new Microsoft.Xna.Framework.Vector2(0, 0), Vector2.One, 0f, spacing - 1f);
-                _spriteBatch.DrawString(spriteFont, text, new Microsoft.Xna.Framework.Vector2(position.X, position.Y + outlineWidth), outline, 0f, new Microsoft.Xna.Framework.Vector2(0, 0), Vector2.One, 0f, spacing - 1f);
-                _spriteBatch.DrawString(spriteFont, text, new Microsoft.Xna.Framework.Vector2(position.X - outlineWidth, position.Y - outlineWidth), outline, 0f, new Microsoft.Xna.Framework.Vector2(0, 0), Vector2.One, 0f, spacing - 1f);
-                _spriteBatch.DrawString(spriteFont, text, new Microsoft.Xna.Framework.Vector2(position.X - outlineWidth, position.Y + outlineWidth), outline, 0f, new Microsoft.Xna.Framework.Vector2(0, 0), Vector2.One, 0f, spacing - 1f);
-                _spriteBatch.DrawString(spriteFont, text, new Microsoft.Xna.Framework.Vector2(position.X + outlineWidth, position.Y - outlineWidth), outline, 0f, new Microsoft.Xna.Framework.Vector2(0, 0), Vector2.One, 0f, spacing - 1f);
-                _spriteBatch.DrawString(spriteFont, text, new Microsoft.Xna.Framework.Vector2(position.X + outlineWidth, position.Y + outlineWidth), outline, 0f, new Microsoft.Xna.Framework.Vector2(0, 0), Vector2.One, 0f, spacing - 1f);
+                    // because we draw outline in a primitive way, we want it to fade a lot faster than fill color
+                    if (outlineColor.A < 255)
+                    {
+                        float alphaFactor = (float)(outlineColor.A / 255f);
+                        outlineColor.A = (byte)((float)fillColor.A * Math.Pow(alphaFactor, 7));
+                    }
+                    
+                    var outlineColorMg = ToMgColor(outlineColor);
+                    _spriteBatch.DrawString(spriteFont, text, new Microsoft.Xna.Framework.Vector2(position.X - outlineWidth, position.Y), outlineColorMg, 0f, new Microsoft.Xna.Framework.Vector2(0, 0), Vector2.One, 0f, spacing - 1f);
+                    _spriteBatch.DrawString(spriteFont, text, new Microsoft.Xna.Framework.Vector2(position.X, position.Y - outlineWidth), outlineColorMg, 0f, new Microsoft.Xna.Framework.Vector2(0, 0), Vector2.One, 0f, spacing - 1f);
+                    _spriteBatch.DrawString(spriteFont, text, new Microsoft.Xna.Framework.Vector2(position.X + outlineWidth, position.Y), outlineColorMg, 0f, new Microsoft.Xna.Framework.Vector2(0, 0), Vector2.One, 0f, spacing - 1f);
+                    _spriteBatch.DrawString(spriteFont, text, new Microsoft.Xna.Framework.Vector2(position.X, position.Y + outlineWidth), outlineColorMg, 0f, new Microsoft.Xna.Framework.Vector2(0, 0), Vector2.One, 0f, spacing - 1f);
+                    _spriteBatch.DrawString(spriteFont, text, new Microsoft.Xna.Framework.Vector2(position.X - outlineWidth, position.Y - outlineWidth), outlineColorMg, 0f, new Microsoft.Xna.Framework.Vector2(0, 0), Vector2.One, 0f, spacing - 1f);
+                    _spriteBatch.DrawString(spriteFont, text, new Microsoft.Xna.Framework.Vector2(position.X - outlineWidth, position.Y + outlineWidth), outlineColorMg, 0f, new Microsoft.Xna.Framework.Vector2(0, 0), Vector2.One, 0f, spacing - 1f);
+                    _spriteBatch.DrawString(spriteFont, text, new Microsoft.Xna.Framework.Vector2(position.X + outlineWidth, position.Y - outlineWidth), outlineColorMg, 0f, new Microsoft.Xna.Framework.Vector2(0, 0), Vector2.One, 0f, spacing - 1f);
+                    _spriteBatch.DrawString(spriteFont, text, new Microsoft.Xna.Framework.Vector2(position.X + outlineWidth, position.Y + outlineWidth), outlineColorMg, 0f, new Microsoft.Xna.Framework.Vector2(0, 0), Vector2.One, 0f, spacing - 1f);
+                    
+                    var colorMg = ToMgColor(fillColor);
+                    _spriteBatch.DrawString(spriteFont, text, new Microsoft.Xna.Framework.Vector2(position.X, position.Y), colorMg, characterSpacing: spacing - 1f);
+                }
             }
-
-            // draw fill
+            else
             {
+                // draw without outline
                 var colorMg = ToMgColor(fillColor);
-                _spriteBatch.DrawString(spriteFont, text, new Microsoft.Xna.Framework.Vector2(position.X, position.Y), colorMg, 0f, new Microsoft.Xna.Framework.Vector2(0, 0), Vector2.One, 0f, spacing - 1f);
+                _spriteBatch.DrawString(spriteFont, text, new Microsoft.Xna.Framework.Vector2(position.X, position.Y), colorMg, characterSpacing: spacing - 1f);
             }
         }
 
